@@ -19,6 +19,9 @@ def main():
         task_priority = st.selectbox("Priority", ["Low", "Medium", "High"])
         task_category = st.selectbox("Category", ["Work", "Personal", "School", "Other"])
         task_due_date = st.date_input("Due Date")
+        task_due_time = st.time_input("Time of Day (optional)")
+        task_completion_time = st.number_input("Estimated Time (minutes)", min_value=0, step=5)
+        task_recurrence = st.selectbox("Recurrence", ["none", "daily", "weekly", "monhthly"])
         submit_button = st.form_submit_button("Add Task")
         
         if submit_button and task_title:
@@ -30,7 +33,10 @@ def main():
                 "category": task_category,
                 "due_date": task_due_date.strftime("%Y-%m-%d"),
                 "completed": False,
-                "created_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                "created_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                "due_time": task_due_time.strftime("%H:%M"),
+                "completion_time": task_completion_time,
+                "recurrence": task_recurrence
             }
             tasks.append(new_task)
             save_tasks(tasks)
@@ -66,7 +72,7 @@ def main():
             else:
                 st.markdown(f"**{task['title']}**")
             st.write(task["description"])
-            st.caption(f"Due: {task['due_date']} | Priority: {task['priority']} | Category: {task['category']}")
+            st.caption(f"Due: {task['due_date']} at {task['due_time']} | Priority: {task['priority']} | Category: {task['category']}")
         with col2:
             if st.button("Complete" if not task["completed"] else "Undo", key=f"complete_{task['id']}"):
                 for t in tasks:
