@@ -15,7 +15,7 @@ def test_add_recurring_task():
 
     # test weekly task creation
     task = add_task(
-        name="Weekly task",
+        title="Weekly task",
         due_date=datetime.date.today(),
         priority="Medium",
         category="Personal",
@@ -25,7 +25,7 @@ def test_add_recurring_task():
 
     # test monthly task creation
     task = add_task(
-        name="Monthly task",
+        title="Monthly task",
         due_date=datetime.date.today(),
         priority="Low",
         category="Work",
@@ -33,4 +33,27 @@ def test_add_recurring_task():
     )
     assert task["recurrence"] == "monthly"
 
-    # TODO: make sure task attributes match the source
+# tests adding a test with a set time of day
+# basically makes sure there is a "task_time" attribute of tasks
+def test_add_task_with_time():
+    task_time = datetime.time(14, 30)
+    task = add_task(
+        title="Appointment/Meeting",
+        due_date=datetime.date.today(),
+        priority="Medium",
+        category="Personal",
+        task_time=task_time
+    )
+    assert task["task_time"] == task_time
+
+# tests adding a test with an estimated completion time
+# basically tests if there is a "completion_time" attribute of tasks
+def test_add_task_completion_time():
+    task = add_task(
+        title="Timed task",
+        due_date=datetime.date.today(),
+        priority="High",
+        category="Work",
+        completion_time=90 # in minutes
+    )
+    assert task["completion_time"] == 90
