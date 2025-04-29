@@ -1,4 +1,5 @@
 import pytest
+from datetime import date, timedelta, time
 
 # test add_recurring_task function
 # basically makes sure there is a recurrence attribute that can be assigned daily, weekly, or monthly
@@ -6,7 +7,7 @@ def test_add_recurring_task():
     # test daily task creation
     task = add_task(
         name="Daily task",
-        due_date=datetime.date.today(),
+        due_date=date.today(),
         priority="High",
         category="Work",
         recurrence="daily"
@@ -16,7 +17,7 @@ def test_add_recurring_task():
     # test weekly task creation
     task = add_task(
         title="Weekly task",
-        due_date=datetime.date.today(),
+        due_date=date.today(),
         priority="Medium",
         category="Personal",
         recurrence="weekly"
@@ -26,7 +27,7 @@ def test_add_recurring_task():
     # test monthly task creation
     task = add_task(
         title="Monthly task",
-        due_date=datetime.date.today(),
+        due_date=date.today(),
         priority="Low",
         category="Work",
         recurrence="monthly"
@@ -36,10 +37,10 @@ def test_add_recurring_task():
 # tests adding a test with a set time of day
 # basically makes sure there is a "task_time" attribute of tasks
 def test_add_task_with_time():
-    task_time = datetime.time(14, 30)
+    task_time = time(14, 30)
     task = add_task(
         title="Appointment/Meeting",
-        due_date=datetime.date.today(),
+        due_date=date.today() + timedelta(days=1),
         priority="Medium",
         category="Personal",
         task_time=task_time
