@@ -1,0 +1,7 @@
+Bug: Past Date
+Description: Tasks can be assigned to a date that has already passed.
+Steps to reproduce: When creating a task, select a date before the current date and click add task. 
+Actual behavior: It will add it.
+Expected behavior: Reject the task because of invalid date.
+Screenshot: 1-pastdate.png
+
