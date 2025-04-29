@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
-from datetime import datetime
+from datetime import datetime, timedelta
+from dateutil.relativedelta import relativedelta
 from tasks import load_tasks, save_tasks, filter_tasks_by_priority, filter_tasks_by_category
 
 def main():
@@ -8,6 +9,12 @@ def main():
     
     # Load existing tasks
     tasks = load_tasks()
+
+    # Patch old tasks
+    for task in tasks:
+        task.setdefault("due_time", "00:00")
+        task.setdefault("completion_time", 0)
+        task.setdefault("recurrence", "none")
     
     # Sidebar for adding new tasks
     st.sidebar.header("Add New Task")
@@ -21,7 +28,7 @@ def main():
         task_due_date = st.date_input("Due Date")
         task_due_time = st.time_input("Time of Day (optional)")
         task_completion_time = st.number_input("Estimated Time (minutes)", min_value=0, step=5)
-        task_recurrence = st.selectbox("Recurrence", ["none", "daily", "weekly", "monhthly"])
+        task_recurrence = st.selectbox("Recurrence", ["none", "daily", "weekly", "monthly"])
         submit_button = st.form_submit_button("Add Task")
         
         if submit_button and task_title:
@@ -72,12 +79,29 @@ def main():
             else:
                 st.markdown(f"**{task['title']}**")
             st.write(task["description"])
-            st.caption(f"Due: {task['due_date']} at {task['due_time']} | Priority: {task['priority']} | Category: {task['category']}")
+            st.caption(f"Due: {task['due_date']} at {task['due_time']} | Priority: {task['priority']} | Category: {task['category']} | Recurrence: {task['recurrence']}")
         with col2:
             if st.button("Complete" if not task["completed"] else "Undo", key=f"complete_{task['id']}"):
                 for t in tasks:
                     if t["id"] == task["id"]:
-                        t["completed"] = not t["completed"]
+                        if  not t["completed"]:
+                            t["completed"] = True
+                            # Handle recurrence
+                            if t["recurrence"] == "daily":
+                                new_due = datetime.strptime(t["due_date"], "%Y-%m-%d") + timedelta(days=1)
+                                t["due_date"] = new_due.strftime("%Y-%m-%d")
+                                t["completed"] = False
+                            elif t["recurrence"] == "weekly":
+                                new_due = datetime.strptime(t["due_date"], "%Y-%m-%d") + timedelta(weeks=1)
+
+                                t["due_date"] = new_due.strftime("%Y-%m-%d")
+                                t["completed"] = False
+                            elif t["recurrence"] == "monthly":
+                                new_due = datetime.strptime(t["due_date"], "%Y-%m-%d") + relativedelta(months=1) 
+                                t["due_date"] = new_due.strftime("%Y-%m-%d")
+                                t["completed"] = False
+                        else:
+                            t["completed"] = False
                         save_tasks(tasks)
                         st.rerun()
             if st.button("Delete", key=f"delete_{task['id']}"):
