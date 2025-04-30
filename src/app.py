@@ -48,7 +48,7 @@ def main():
                 st.sidebar.warning("Due time is in the past.")
             else:
                 new_task = {
-                    "id": len(tasks) + 1,
+                    "id": generate_unique_id(tasks),
                     "title": task_title,
                     "description": task_description,
                     "priority": task_priority,
