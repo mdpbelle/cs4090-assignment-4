@@ -4,6 +4,11 @@ from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from tasks import load_tasks, save_tasks, get_overdue_tasks, generate_unique_id, filter_tasks_by_priority, filter_tasks_by_category
 import subprocess
+import sys
+import os
+
+# set sys path to src directory so it knows where to look
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
 
 def main():
     st.title("To-Do Application")
@@ -141,6 +146,15 @@ def main():
     if st.button("Run with Coverage"):
         st.success("Run this from the terminal:")
         st.code("pytest --cov=src tests/")
+    if st.button("Run BDD Tests"):
+        env = os.environ.copy() # copy current environment
+        env["PYTHONPATH"] = os.path.abspath(os.path.join(os.path.dirname(__file__), "../src")) # modify pythonpath
+        result = subprocess.run(["behave", "../tests/feature"],
+                                cwd="src",
+                                capture_output=True,
+                                text=True)
+        st.text_area("BDD Output", result.stdout + "\n" + result.stderr, height=300)
+        #st.code(subprocess.getoutput("behave tests/feature"))
     if st.button("Run Unit Tests"):
         with st.spinner("Running pytest..."):
             result = subprocess.run(["pytest", "tests"], capture_output=True, text=True)
