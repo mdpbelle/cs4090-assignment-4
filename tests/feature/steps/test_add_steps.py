@@ -6,10 +6,6 @@ import os
 
 # make sure it knows where to run tests
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../src')))
-print("Current sys.path:")
-for p in sys.path:
-    print(p)
-from tasks import create_task
 
 @given("I have an empty task list")
 def step_impl(context):
