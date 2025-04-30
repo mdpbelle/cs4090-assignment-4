@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
-from tasks import load_tasks, save_tasks, get_overdue_tasks, filter_tasks_by_priority, filter_tasks_by_category
+from tasks import load_tasks, save_tasks, get_overdue_tasks, generate_unique_id, filter_tasks_by_priority, filter_tasks_by_category
 import subprocess
 
 def main():
