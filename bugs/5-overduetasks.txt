@@ -1,0 +1,7 @@
+Bug: Overdue Tasks not displayed
+Description: Tasks whose due date and time has passed are not displayed as overdue
+Steps to reproduce: Load overdue tasks in the tasks.json file, with a due_date before today or a due_date of today with a due_time before the current time. 
+Actual behavior: They will be displayed normally.
+Expected behavior: They should be displayed with an (Overdue) tag
+Screenshots: 5-overduetasks.png, 5-overduetasksfixed.png
+

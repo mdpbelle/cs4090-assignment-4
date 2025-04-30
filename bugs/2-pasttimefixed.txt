@@ -1,0 +1,7 @@
+Bug: Past Time
+Description: Tasks can be assigned to a time that has already passed.
+Steps to reproduce: When creating a task, select the current date, select a time that has passed, and click add task. 
+Actual behavior: It will add it.
+Expected behavior: Reject the task because of invalid time.
+Screenshot: 2-pasttimefixed.png
+

@@ -1,0 +1,6 @@
+Bug: Recurring Tasks
+Description: Tasks can be assigned recurrence but do not recur when marked complete.
+Steps to reproduce: When creating a task, select recurrence other than None and click add task, then mark it complete. 
+Actual behavior: It will mark it complete and hide it.
+Expected behavior: Mark it complete, update the due date according to recurrence, and add a new task with the new due_date.
+

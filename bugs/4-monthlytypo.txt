@@ -1,0 +1,6 @@
+Bug: Monthly Recurrency Typo
+Description: In the dropdown menu for recurrence, the "Monthy" option was misspelled as "Monhthly", causing the recurrence to not be registered.
+Steps to reproduce: When creating a task, select "Monhthly" recurrence and add it
+Actual behavior: Recurrence isn't recognized
+Expected behavior: "Monthly" option that recognizes recurrence
+

@@ -8,7 +8,7 @@ from unittest.mock import patch
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
 from tasks import save_tasks, load_tasks, create_task, get_overdue_tasks, generate_unique_id, filter_tasks_by_priority, filter_tasks_by_category, filter_tasks_by_completion, search_tasks
 
-TEST_FILE = "test_advance.json"
+TEST_FILE = "tests/test_advance.json"
 
 @pytest.fixture
 def sample_tasks():
