@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
-from tasks import load_tasks, save_tasks, filter_tasks_by_priority, filter_tasks_by_category
+from tasks import load_tasks, save_tasks, get_overdue_tasks, filter_tasks_by_priority, filter_tasks_by_category
 import subprocess
 
 def main():
@@ -16,6 +16,10 @@ def main():
         task.setdefault("due_time", "00:00")
         task.setdefault("completion_time", 0)
         task.setdefault("recurrence", "none")
+
+    # get overdue tasks from file
+    overdue_tasks = get_overdue_tasks(tasks)
+    overdue_ids = {task["id"] for task in overdue_tasks}
     
     # Sidebar for adding new tasks
     st.sidebar.header("Add New Task")
@@ -83,10 +87,15 @@ def main():
     
     # Display tasks
     for task in filtered_tasks:
+        # check for new overdue tasks
+        task_datetime = datetime.strptime(task["due_date"] + " " + task["due_time"], "%Y-%m-%d %H:%M")
+        is_overdue = not task["completed"] and task_datetime < datetime.now()
         col1, col2 = st.columns([4, 1])
         with col1:
             if task["completed"]:
                 st.markdown(f"~~**{task['title']}**~~")
+            elif task["id"] in overdue_ids or is_overdue:
+                st.markdown(f"**{task['title']} (Overdue)**")
             else:
                 st.markdown(f"**{task['title']}**")
             st.write(task["description"])
