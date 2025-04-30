@@ -32,7 +32,7 @@ def test_save_and_load_tasks(sample_tasks):
     assert loaded[0]["title"] == "special"
     os.remove(TEST_FILE)
 
-def test_load_tasks_nonexisten():
+def test_load_tasks_nonexistent():
     assert load_tasks("nonexistent_file.json") == []
 
 def test_create_task_no_title():
