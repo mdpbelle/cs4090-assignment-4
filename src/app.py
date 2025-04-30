@@ -3,6 +3,7 @@ import pandas as pd
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from tasks import load_tasks, save_tasks, filter_tasks_by_priority, filter_tasks_by_category
+import subprocess
 
 def main():
     st.title("To-Do Application")
@@ -111,7 +112,7 @@ def main():
     with st.expander("Run Unit Tests (dev only)"):
         if st.button("Run Tests"):
             with st.spinner("Running pytest..."):
-                result = subprocess.run(["pytest", "tests"], capture_output=True, test=True)
+                result = subprocess.run(["pytest", "tests"], capture_output=True, text=True)
                 st.text(result.stdout)
                 if result.stderr:
                     st.error(result.stderr)
