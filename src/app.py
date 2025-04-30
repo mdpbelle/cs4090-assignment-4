@@ -32,23 +32,33 @@ def main():
         task_recurrence = st.selectbox("Recurrence", ["none", "daily", "weekly", "monthly"])
         submit_button = st.form_submit_button("Add Task")
         
-        if submit_button and task_title:
-            new_task = {
-                "id": len(tasks) + 1,
-                "title": task_title,
-                "description": task_description,
-                "priority": task_priority,
-                "category": task_category,
-                "due_date": task_due_date.strftime("%Y-%m-%d"),
-                "completed": False,
-                "created_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                "due_time": task_due_time.strftime("%H:%M"),
-                "completion_time": task_completion_time,
-                "recurrence": task_recurrence
-            }
-            tasks.append(new_task)
-            save_tasks(tasks)
-            st.sidebar.success("Task added successfully!")
+        now_date = datetime.now().date()
+        now_time = datetime.now().time()
+
+        if submit_button:
+            if not task_title:
+                st.sidebar.error("Task title is required.")
+            elif task_due_date < now_date:
+                st.sidebar.warning("Due date has already passed.")
+            elif task_due_date == now_date and task_due_time < now_time:
+                st.sidebar.warning("Due time is in the past.")
+            else:
+                new_task = {
+                    "id": len(tasks) + 1,
+                    "title": task_title,
+                    "description": task_description,
+                    "priority": task_priority,
+                    "category": task_category,
+                    "due_date": task_due_date.strftime("%Y-%m-%d"),
+                    "completed": False,
+                    "created_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                    "due_time": task_due_time.strftime("%H:%M"),
+                    "completion_time": task_completion_time,
+                    "recurrence": task_recurrence
+                }
+                tasks.append(new_task)
+                save_tasks(tasks)
+                st.sidebar.success("Task added successfully!")
     
     # Main area to display tasks
     st.header("Your Tasks")
