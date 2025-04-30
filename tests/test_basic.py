@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 
 # set path to src folder so tests know where to look
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
-from tasks import load_tasks, create_task, save_tasks, filter_tasks_by_priority, filter_tasks_by_category, filter_tasks_by_completion, search_tasks, get_overdue_tasks
+from tasks import load_tasks, create_task, generate_unique_id, save_tasks, filter_tasks_by_priority, filter_tasks_by_category, filter_tasks_by_completion, search_tasks, get_overdue_tasks
 
 TEST_FILE = "test_basic.json"
 
@@ -31,6 +31,15 @@ def test_save_and_load_tasks(sample_tasks):
     assert len(loaded) == 3
     assert loaded[0]["title"] == "special"
     os.remove(TEST_FILE)
+
+def test_load_tasks_fail():
+    assert load_tasks("nonexistent_file.json") == []
+
+def test_generate_unique_id(sample_tasks):
+    assert generate_unique_id(sample_tasks) == 4
+
+def test_generate_unique_id_fail():
+    assert generate_unique_id([]) == 1
 
 def test_filter_by_category(sample_tasks):
     filtered = filter_tasks_by_category(sample_tasks, "Work")
