@@ -3,9 +3,13 @@ from behave import given, when, then
 from datetime import datetime
 import sys
 import os
+from pathlib import Path
 
 # make sure it knows where to run tests
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../src')))
+#sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../src')))
+src_path = Path(__file__).resolve().parents[2] / "src"
+sys.path.insert(0, str(src_path))
+from tasks import create_task
 
 @given("I have an empty task list")
 def step_impl(context):

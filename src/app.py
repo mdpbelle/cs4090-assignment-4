@@ -149,7 +149,6 @@ def main():
                                 capture_output=True,
                                 text=True)
         st.text_area("BDD Output", result.stdout + "\n" + result.stderr, height=300)
-        #st.code(subprocess.getoutput("behave tests/feature"))
     if st.button("Run Unit Tests"):
         with st.spinner("Running pytest..."):
             result = subprocess.run(["pytest", "tests"], capture_output=True, text=True)
