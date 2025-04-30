@@ -128,13 +128,25 @@ def main():
                 tasks = [t for t in tasks if t["id"] != task["id"]]
                 save_tasks(tasks)
                 st.rerun()
-    with st.expander("Run Unit Tests (dev only)"):
-        if st.button("Run Tests"):
-            with st.spinner("Running pytest..."):
-                result = subprocess.run(["pytest", "tests"], capture_output=True, text=True)
-                st.text(result.stdout)
-                if result.stderr:
-                    st.error(result.stderr)
+    st.title("Pytest Advanced Feature Runner")
+    if st.button("Run Parameterized Tests"):
+        st.code(subprocess.getoutput("pytest tests/test_advanced.py -k 'param'"))
+    if st.button("Run Mocked Tests"):
+        st.code(subprocess.getoutput("pytest tests/test_advanced.py -k 'mock'"))
+    if st.button("Run tmp_path tests"):
+        st.code(subprocess.getoutput("pytest tests/test_advanced.py -k 'tmp'"))
+    if st.button("Generate HTML Report"):
+        st.success("Run this from the terminal:")
+        st.code("pytest --html=report.html")
+    if st.button("Run with Coverage"):
+        st.success("Run this from the terminal:")
+        st.code("pytest --cov=src tests/")
+    if st.button("Run Unit Tests"):
+        with st.spinner("Running pytest..."):
+            result = subprocess.run(["pytest", "tests"], capture_output=True, text=True)
+            st.text(result.stdout)
+            if result.stderr:
+                st.error(result.stderr)
 
 if __name__ == "__main__":
     main()
