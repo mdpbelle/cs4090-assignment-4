@@ -6,10 +6,12 @@ from tasks import load_tasks, save_tasks, get_overdue_tasks, generate_unique_id,
 import subprocess
 import sys
 import os
-import webbrowser
+from pathlib import Path
 
 # set sys path to src directory so it knows where to look
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
+# sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
+root = Path(__file__).resolve().parent
+src_dir = root / "src"
 
 def main():
     st.title("To-Do Application")
@@ -134,38 +136,40 @@ def main():
                 tasks = [t for t in tasks if t["id"] != task["id"]]
                 save_tasks(tasks)
                 st.rerun()
-    st.title("Pytest Advanced Feature Runner")
-    if st.button("Run Parameterized Tests"):
-        st.code(subprocess.getoutput("pytest tests/test_advanced.py -k 'param'"))
-    if st.button("Run Mocked Tests"):
-        st.code(subprocess.getoutput("pytest tests/test_advanced.py -k 'mock'"))
-    if st.button("Run tmp_path tests"):
-        st.code(subprocess.getoutput("pytest tests/test_advanced.py -k 'tmp'"))
-    if st.button("Run BDD Tests"):
-        env = os.environ.copy() # copy current environment
-        env["PYTHONPATH"] = os.path.abspath(os.path.join(os.path.dirname(__file__), "../src")) # modify pythonpath
-        result = subprocess.run(["behave", "../tests/feature"],
-                                cwd="src",
-                                capture_output=True,
-                                text=True)
-        st.text_area("BDD Output", result.stdout + "\n" + result.stderr, height=300)
-    if st.button("Run Unit Tests"):
-        with st.spinner("Running pytest..."):
-            result = subprocess.run(["pytest", "tests"], capture_output=True, text=True)
-            st.text(result.stdout)
-            if result.stderr:
-                st.error(result.stderr)            
-    if st.button("Run with Coverage and generate HTML report"):
-        root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-        with st.spinner("Running coverage..."):
-            try:
-                result = subprocess.run(["coverage", "run", "-m", "pytest", "tests/"], cwd=root, capture_output=True, text=True)
+    # dev tools
+    if os.getenv("DEV_MODE") == "1":
+        st.title("Pytest Advanced Feature Runner")
+        if st.button("Run Parameterized Tests"):
+            st.code(subprocess.getoutput("pytest tests/test_advanced.py -k 'param'"))
+        if st.button("Run Mocked Tests"):
+            st.code(subprocess.getoutput("pytest tests/test_advanced.py -k 'mock'"))
+        if st.button("Run tmp_path tests"):
+            st.code(subprocess.getoutput("pytest tests/test_advanced.py -k 'tmp'"))
+        if st.button("Run BDD Tests"):
+            env = os.environ.copy() # copy current environment
+            env["PYTHONPATH"] = str(src_dir) # modify pythonpath
+            result = subprocess.run(["behave", "../tests/feature"],
+                                    cwd="src",
+                                    capture_output=True,
+                                    text=True)
+            st.text_area("BDD Output", result.stdout + "\n" + result.stderr, height=300)
+        if st.button("Run Unit Tests"):
+            with st.spinner("Running pytest..."):
+                result = subprocess.run(["pytest", "tests"], capture_output=True, text=True)
                 st.text(result.stdout)
-                st.text(result.stderr)
-                subprocess.run(["coverage", "html"], check=True)
-                st.text("View report in /htmlcov/index.html")
-            except subprocess.CalledProcessError as e:
-                st.error(f"Error running coverage: {e}")
+                if result.stderr:
+                    st.error(result.stderr)            
+        if st.button("Run with Coverage and generate HTML report"):
+            env["PYTHON_PATH"] = str(src_dir)
+            with st.spinner("Running coverage..."):
+                try:
+                    result = subprocess.run(["coverage", "run", "-m", "pytest", "tests/"], cwd=root, capture_output=True, text=True)
+                    st.text(result.stdout)
+                    st.text(result.stderr)
+                    subprocess.run(["coverage", "html"], check=True)
+                    st.text("View report in /htmlcov/index.html")
+                except subprocess.CalledProcessError as e:
+                    st.error(f"Error running coverage: {e}")
 
 if __name__ == "__main__":
     main()
