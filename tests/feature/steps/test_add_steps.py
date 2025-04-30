@@ -1,12 +1,14 @@
 import pytest
 from behave import given, when, then
-from tasks import create_task
 from datetime import datetime
 import sys
 import os
 
 # make sure it knows where to run tests
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../src')))
+print("Current sys.path:")
+for p in sys.path:
+    print(p)
 from tasks import create_task
 
 @given("I have an empty task list")

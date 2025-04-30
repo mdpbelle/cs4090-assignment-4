@@ -6,6 +6,7 @@ from tasks import load_tasks, save_tasks, get_overdue_tasks, generate_unique_id,
 import subprocess
 import sys
 import os
+import webbrowser
 
 # set sys path to src directory so it knows where to look
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
@@ -140,12 +141,6 @@ def main():
         st.code(subprocess.getoutput("pytest tests/test_advanced.py -k 'mock'"))
     if st.button("Run tmp_path tests"):
         st.code(subprocess.getoutput("pytest tests/test_advanced.py -k 'tmp'"))
-    if st.button("Generate HTML Report"):
-        st.success("Run this from the terminal:")
-        st.code("pytest --html=report.html")
-    if st.button("Run with Coverage"):
-        st.success("Run this from the terminal:")
-        st.code("pytest --cov=src tests/")
     if st.button("Run BDD Tests"):
         env = os.environ.copy() # copy current environment
         env["PYTHONPATH"] = os.path.abspath(os.path.join(os.path.dirname(__file__), "../src")) # modify pythonpath
@@ -160,7 +155,18 @@ def main():
             result = subprocess.run(["pytest", "tests"], capture_output=True, text=True)
             st.text(result.stdout)
             if result.stderr:
-                st.error(result.stderr)
+                st.error(result.stderr)            
+    if st.button("Run with Coverage and generate HTML report"):
+        root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+        with st.spinner("Running coverage..."):
+            try:
+                result = subprocess.run(["coverage", "run", "-m", "pytest", "tests/"], cwd=root, capture_output=True, text=True)
+                st.text(result.stdout)
+                st.text(result.stderr)
+                subprocess.run(["coverage", "html"], check=True)
+                st.text("View report in /htmlcov/index.html")
+            except subprocess.CalledProcessError as e:
+                st.error(f"Error running coverage: {e}")
 
 if __name__ == "__main__":
     main()

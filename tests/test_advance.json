@@ -1,0 +1,25 @@
+[
+  {
+    "id": 1,
+    "title": "Urgent",
+    "priority": "High",
+    "category": "Work",
+    "due_date": "2025-05-15",
+    "completed": false
+  },
+  {
+    "id": 2,
+    "title": "Done",
+    "priority": "Medium",
+    "category": "Personal",
+    "completed": true
+  },
+  {
+    "id": 3,
+    "title": "Late",
+    "priority": "Low",
+    "category": "Errands",
+    "due_date": "2025-04-15",
+    "completed": false
+  }
+]
