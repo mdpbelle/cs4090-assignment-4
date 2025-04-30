@@ -108,6 +108,13 @@ def main():
                 tasks = [t for t in tasks if t["id"] != task["id"]]
                 save_tasks(tasks)
                 st.rerun()
+    with st.expander("Run Unit Tests (dev only)"):
+        if st.button("Run Tests"):
+            with st.spinner("Running pytest..."):
+                result = subprocess.run(["pytest", "tests"], capture_output=True, test=True)
+                st.text(result.stdout)
+                if result.stderr:
+                    st.error(result.stderr)
 
 if __name__ == "__main__":
     main()

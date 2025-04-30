@@ -26,18 +26,16 @@ def load_tasks(file_path=DEFAULT_TASKS_FILE):
         return []
 
 # create tasks without a file
-def create_task(title, description=None, priority="Low", category="Personal", due_date=datetime.now().date(), due_time=None, completion_time=None, recurrence=None, task_id=0):
+def create_task(title, description=None, priority="Low", category="Personal", due_date=None, due_time=None, completion_time=None, recurrence=None, task_id=0):
     if not title:
         raise ValueError("Title is required")
-    if due_date < datetime.now().date():
-        raise ValueError("Due date cannot be in the past")
     task = {
         "id": task_id,
         "title": title,
         "description": description,
         "priority": priority,
         "category": category,
-        "due_date": due_date.strftime("%Y-%m-%d"),
+        "due_date": due_date,
         "completed": False,
         "created_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         "due_time": due_time,
